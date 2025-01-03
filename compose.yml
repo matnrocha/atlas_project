@@ -1,0 +1,87 @@
+services:
+  atlas-api:
+    build:
+      context: ./backend/api/ATLAS_api
+      dockerfile: Dockerfile
+    ports:
+      - ${SPRING_PORTS}
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - kafka
+
+  db:
+    image: postgres:13
+    ports:
+      - ${POSTGRES_PORT}
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - ${POSTGRES_VOLUME}
+  frontend:
+    build:
+      context: ./frontend/atlas
+      dockerfile: Dockerfile
+    ports:
+      - ${FRONTEND_PORT}
+    env_file:
+      - .env
+    depends_on:
+      - atlas-api
+
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.4.4
+    environment:
+      ZOOKEEPER_CLIENT_PORT: ${ZOOKEEPER_CLIENT_PORT}
+      ZOOKEEPER_TICK_TIME: ${ZOOKEEPER_TICK_TIME}
+    ports:
+      - ${ZOOKEEPER_PORTS}
+
+  kafka:
+    image: confluentinc/cp-kafka:7.4.4
+    depends_on:
+      - zookeeper
+    ports:
+      - ${KAFKA_PORTS}
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:${ZOOKEEPER_CLIENT_PORT}
+      KAFKA_ADVERTISED_LISTENERS: ${KAFKA_ADVERTISED_LISTENERS}
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: ${KAFKA_LISTENER_SECURITY_PROTOCOL_MAP}
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_LOG_RETENTION_MS: 10000
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 5000
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "29092"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  kafdrop:
+    image: obsidiandynamics/kafdrop:4.0.2
+    depends_on:
+      - kafka
+    ports:
+      - ${KAFDROP_PORTS}
+    environment:
+      KAFKA_BROKERCONNECT: ${KAFKA_BOOTSTRAP_SERVERS}
+      SERVER_SERVLET_CONTEXTPATH: "/"
+
+
+  data-producer:
+    build:
+      context: ./data-gen
+      dockerfile: Dockerfile
+    depends_on:
+      kafka:
+        condition: service_healthy
+    env_file:
+      - .env
+
+volumes:
+  db_data:
