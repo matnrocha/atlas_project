@@ -1,27 +1,53 @@
-### Project Abstract - A.T.L.A.S.
+# A.T.L.A.S. – Advanced Tracking Legendary Automated Spaceship
 
-Advanced Tracking Legendary Automated Spaceship, also known as A.T.L.A.S., serves as a real-time monitoring system for a spaceship. It gathers and displays essential spaceship metrics and provides clear data visualization, with an alert system for any anomalies.
+**Real-time spaceship monitoring system — Built with Spring Boot, Kafka, PostgreSQL, and React.**
 
+## Sobre o Projeto
 
+A.T.L.A.S. é um sistema inteligente de monitoramento em tempo real para operações espaciais. Desenvolvido como projeto principal do curso de Introdução à Engenharia de Software na Universidade de Aveiro, o sistema foi projetado para simular o acompanhamento de métricas críticas de uma espaçonave, emitir alertas sobre anomalias e apresentar dados de forma clara e acessível.
 
-### Project Team - P2 Group 02
+Este projeto destaca-se pela arquitetura robusta, uso de tecnologias modernas e ênfase em boas práticas de engenharia de software.
 
-| **Role**          | **Name**          | **University Number** | **GitHub Profile**                          |
-|-------------------|-------------------|-----------------------|---------------------------------------------|
-| Team Manager      | Raquel Vinagre    |         113736        |  [Raquel](https://github.com/raquelvinagre)  |
-| Product Owner     | Henrique Oliveira |         113585        |  [Henrique](https://github.com/hbmo1) |
-| Architect         | Mateus Rocha      |         122949        |  [Mateus](https://github.com/matnrocha)  |
-| DevOps Master     | Diogo Fernandes   |         114137        |  [Diogo](https://github.com/diogux)  |
+## Funcionalidades
 
+- **Monitoramento em tempo real:** posição, velocidade, trajetória e recursos internos da nave (energia, oxigênio, etc).
+- **Alertas inteligentes:** notificações visuais e sonoras para situações críticas (temperatura, oxigênio, falhas de comunicação, etc).
+- **Relatórios analíticos:** geração de resumos de missão e gráficos históricos.
+- **Interface amigável:** painel com dados dinâmicos e responsivos via WebSockets.
+- **Personas realistas:** sistema orientado a diferentes perfis de usuário (CEO, engenheira de bordo, médico, diretora de voo).
 
-### Deploy
-http://deti-ies-07.ua.pt/
+## Tecnologias Utilizadas
 
-### Bookmarks
-[Report](https://docs.google.com/document/d/16gGilBfZF1LuVboUdbeBa7DO-dOnClDUpKn6aKX49dU/edit)
+| Camada        | Tecnologias                     |
+|---------------|----------------------------------|
+| Backend       | Java, Spring Boot, WebSockets    |
+| Frontend      | React, HTML, CSS                |
+| Mensageria    | Apache Kafka                    |
+| Banco de Dados| PostgreSQL                      |
+| Infra         | NGINX (proxy reverso)           |
 
-[Slides](https://uapt33090-my.sharepoint.com/:p:/g/personal/raquelvinagre_ua_pt/EWyXYpcYY5NFmiOOqGsVIwIBL-B-7T-xTKD8BZFbxtW8tQ?e=Lxoaoa)
+## Arquitetura
 
-[Git convention](https://medium.com/linkapi-solutions/conventional-commits-pattern-3778d1a1e657)
- 
-[Prototype](https://www.figma.com/proto/SZoxjXor3TGKgqgDhrpsaq/A.T.L.A.S.?node-id=15-299&p=f&t=SMAVb3SNRRzmuhzM-1&scaling=contain&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=15%3A299)
+A arquitetura modular garante escalabilidade e manutenção simplificada:
+
+- **Data Generator:** simula sensores da nave e envia dados para o Kafka.
+- **Kafka:** gerencia o fluxo assíncrono de dados de telemetria.
+- **Backend (Spring Boot):** processa dados, emite alertas, e disponibiliza APIs REST.
+- **Frontend (React):** exibe métricas, alertas e gráficos em tempo real.
+- **PostgreSQL:** armazena dados persistentes da missão.
+
+<!-- Se tiver diagrama, descomente abaixo -->
+<!-- ![Diagrama de Arquitetura](./docs/architecture-diagram.png) -->
+
+## Como Executar
+
+> Requisitos: Docker, Java 17+, Node.js 16+
+
+```bash
+# 1. Clone o repositório
+git clone https://github.com/seu-usuario/atlas-monitoring-system.git
+cd atlas-monitoring-system
+
+# 2. Suba os containers (Kafka, PostgreSQL)
+docker-compose up -d
+```
