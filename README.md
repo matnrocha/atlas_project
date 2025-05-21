@@ -43,11 +43,53 @@ A arquitetura modular garante escalabilidade e manutenção simplificada:
 
 > Requisitos: Docker, Java 17+, Node.js 16+
 
+###  1. Clone o repositório
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/seu-usuario/atlas-monitoring-system.git
-cd atlas-monitoring-system
-
-# 2. Suba os containers (Kafka, PostgreSQL)
-docker-compose up -d
+git clone https://github.com/matnrocha/atlas_project.git
+cd atlas_project/
 ```
+
+###  2. Copie o arquivo .env_example para .env
+```bash
+cp .env_example .env
+```
+### 3. Copie o .env também para o frontend
+```bash
+cp .env frontend/atlas/
+```
+
+### 4. Derrube os containers existentes (para garantir um ambiente limpo)
+```bash
+docker compose down
+```
+
+### 5. Suba os containers com build
+```bash
+docker compose up --build
+```
+
+## Sugestão de Testes
+
+Existem **5 astronautas cadastrados** que podem ser utilizados para login. Além disso, você também pode **criar usuários com roles de CEO ou Flight Manager** durante o cadastro.
+A autenticação é baseada em **roles (funções)**, portanto, o sistema oferece diferentes acessos conforme o tipo de usuário.
+
+### Credenciais de Astronautas
+
+Você pode utilizar qualquer uma das credenciais abaixo para realizar login como astronauta:
+
+| Nome             | Email                         | Senha           |
+|------------------|-------------------------------|------------------|
+| Saylor Twift     | saylor.twift@email.com        | saylor.twift     |
+| Sus Ana          | sus.ana@email.com             | sus.ana          |
+| Juan Direction   | juan.direction@email.com      | juan.direction   |
+| Lua Dipa         | lua.dipa@email.com            | lua.dipa         |
+| João Cuco        | joao.cuco@email.com           | joao.cuco        |
+
+### Outros Roles do sistema
+
+Esses perfis possuem acesso a funcionalidades exclusivas que **não estão disponíveis para astronautas**, como:
+
+- Gestão de missões
+- Administração de tripulantes
+- Visualização de dashboards administrativos
+
